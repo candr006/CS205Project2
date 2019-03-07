@@ -29,6 +29,8 @@ def nearest_neighbor(a,a_ind):
 		if(key!=a_ind):
 			dist=euclidean_distance(a,d)
 			node=(dist,key)
+
+			#store distance and the key to the original list of records
 			distance_list.append(node)
 
 	#sort distance list
@@ -45,8 +47,15 @@ def nearest_neighbor(a,a_ind):
 
 
 #open the file for reading and add to the list of lists - 23-34
-f = open("test.txt", "r")
+fn= raw_input('Welcome to Bertie Woosters Feature Selection Algorithm.\nType in the name of the file to test :\n ')
+f = open(fn, "r")
+num_features=0
 for line in f:
-   data.append(line.split())
+   arr_line=line.split()
+   data.append(arr_line)
+   num_features=len(arr_line)-1
    #print(line)
-nearest_neighbor(data[0],0)
+message="\n\nThis dataset has "+str(num_features)+" features (not including the class attribute), with "
+message=message+str(len(data))+" instances"
+print(message)
+#nearest_neighbor(data[0],0)
