@@ -42,11 +42,11 @@ def nearest_neighbor(a,a_ind):
 		nn_key=val[1]
 		break
 
-	print('Nearest neighbor: '+str(data[nn_key]))
-	return data[nn_key]
+	print('Nearest neighbor class: '+str(data[nn_key][0]))
+	return data[nn_key][0]
 
 
-#open the file for reading and add to the list of lists - 23-34
+#open the file for reading and add to the list of lists
 fn= raw_input('Welcome to Bertie Woosters Feature Selection Algorithm.\nType in the name of the file to test :\n ')
 f = open(fn, "r")
 num_features=0
@@ -58,4 +58,4 @@ for line in f:
 message="\n\nThis dataset has "+str(num_features)+" features (not including the class attribute), with "
 message=message+str(len(data))+" instances"
 print(message)
-#nearest_neighbor(data[0],0)
+nearest_neighbor(data[0],0)
