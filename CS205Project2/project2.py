@@ -10,6 +10,9 @@ def getDist(a):
 def getClass(a):
 	return a[0]
 
+def returnAccuracy(a):
+	return a[1]
+
 #calculate the euclidean distance between two rows
 #exclude the class feature
 def euclidean_distance(a,b,feature_list):
@@ -22,7 +25,7 @@ def euclidean_distance(a,b,feature_list):
 		i=i+1
 	return math.sqrt(total)
 
-def nearest_neighbor(a,a_ind,feature_list):
+def nearest_neighbor_class(a,a_ind,feature_list):
 	#keeps track of the distance and uses the key of the node to identify it
 	distance_list=[]
 
@@ -46,20 +49,43 @@ def nearest_neighbor(a,a_ind,feature_list):
 		nn_key=val[1]
 		break
 
-	print('Nearest neighbor class: '+str(data[nn_key][0]))
+	#print('Nearest neighbor class: '+str(data[nn_key][0]))
 	return data[nn_key][0]
 
-def feature_selection(num_features):
+def getAccuracy(data,feature_list):
+	num_correct=0
+
+	for key,d in enumerate(data):
+		nn_class=nearest_neighbor_class(d,key,feature_list)
+		#print("Comp Class d: "+str(d[0])+" - "+str(nn_class))
+		if d[0]==nn_class:
+			num_correct=num_correct+1
+	#print("accuracy: "+str(float(num_correct)/float(len(data))))
+	return (float(num_correct)/float(len(data)))
+
+
+def forward_feature_selection(num_features):
 	current_set_of_features = []
 
 	for i in range(1,num_features-1):
-		feature_to_add_at_this_level = []
-		best_so_far_accuracy    = 0
+		feature_to_add_at_this_level = 0
+		best_so_far_accuracy=float(0)
 
 		for j in range(1,num_features-1):
-			if not j in current_set_of_features:
+
+			if j not in current_set_of_features:
 				temp_features=current_set_of_features
 				temp_features.append(j)
+				accuracy=getAccuracy(data,temp_features)
+				#print('Features: '+str(temp_features)+' - Accuracy: '+str(accuracy))
+
+				if accuracy>best_so_far_accuracy:
+					best_so_far_accuracy=accuracy
+					feature_to_add_at_this_level=j
+					
+		current_set_of_features.append(feature_to_add_at_this_level)
+		print("Features "+str(current_set_of_features)+" Accuracy: "+str(accuracy))
+
 
 
 
@@ -77,5 +103,4 @@ for line in f:
 message="\n\nThis dataset has "+str(num_features)+" features (not including the class attribute), with "
 message=message+str(len(data))+" instances"
 print(message)
-nearest_neighbor(data[0],0)
-feature_selection(num_features)
+forward_feature_selection(num_features)
