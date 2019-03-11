@@ -67,6 +67,7 @@ def getAccuracy(data,feature_list):
 def forward_feature_selection(num_features):
 	current_set_of_features = []
 
+	print("\nBeginning Search\n")
 	for i in range(1,num_features-1):
 		feature_to_add_at_this_level = 0
 		best_so_far_accuracy=float(0)
@@ -74,17 +75,19 @@ def forward_feature_selection(num_features):
 		for j in range(1,num_features-1):
 
 			if j not in current_set_of_features:
-				temp_features=current_set_of_features
+				temp_features=current_set_of_features[:]
+				#print('Resetting temp_features: '+str(temp_features))
 				temp_features.append(j)
 				accuracy=getAccuracy(data,temp_features)
-				#print('Features: '+str(temp_features)+' - Accuracy: '+str(accuracy))
+				print('     Using features '+str(temp_features)+' accuracy is: '+str(accuracy))
 
 				if accuracy>best_so_far_accuracy:
 					best_so_far_accuracy=accuracy
 					feature_to_add_at_this_level=j
 					
+
 		current_set_of_features.append(feature_to_add_at_this_level)
-		print("Features "+str(current_set_of_features)+" Accuracy: "+str(accuracy))
+		print("\nFeature set "+str(current_set_of_features)+" was best, accuracy is: "+str(accuracy)+"\n")
 
 
 
