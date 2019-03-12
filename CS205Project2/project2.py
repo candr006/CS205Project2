@@ -119,8 +119,8 @@ def backward_elimination(num_features):
 
 			if j in current_set_of_features:
 				temp_features=current_set_of_features[:]
-				#print('Resetting temp_features: '+str(temp_features))
-				temp_features.pop(j)
+				#print('Removing j: '+str(j)+" from features "+str(temp_features))
+				temp_features.pop(j-1)
 				accuracy=getAccuracy(data,temp_features)
 				print('     Using features '+str(temp_features)+' accuracy is: '+str(accuracy))
 
@@ -131,7 +131,7 @@ def backward_elimination(num_features):
 			j=j-1
 		i=i-1
 
-		current_set_of_features.pop(feature_to_remove_at_this_level)
+		current_set_of_features.pop(feature_to_remove_at_this_level-1)
 		if(best_so_far_accuracy>best_overall_accuracy):
 			best_overall_accuracy=best_so_far_accuracy
 			best_overall_features=current_set_of_features[:]
