@@ -64,8 +64,10 @@ def getAccuracy(data,feature_list):
 	return (float(num_correct)/float(len(data)))
 
 
-def forward_feature_selection(num_features):
+def forward_selection(num_features):
 	current_set_of_features = []
+	best_overall_features=[]
+	best_overall_accuracy=float(0)
 
 	print("\nBeginning Search\n")
 	for i in range(1,num_features-1):
@@ -87,11 +89,53 @@ def forward_feature_selection(num_features):
 					
 
 		current_set_of_features.append(feature_to_add_at_this_level)
-		print("\nFeature set "+str(current_set_of_features)+" was best, accuracy is: "+str(accuracy)+"\n")
+		if(best_so_far_accuracy>best_overall_accuracy):
+			best_overall_accuracy=best_so_far_accuracy
+			best_overall_features=current_set_of_features[:]
+
+		print("\nFeature set "+str(current_set_of_features)+" was best, accuracy is: "+str(best_so_far_accuracy)+"\n")
+
+	print("\nFinished Search!!! The best feature subset is "+str(best_overall_features)+" with an accuracy of "+str(best_overall_accuracy))
 
 
+def backward_elimination(num_features):
+	k=1
+	current_set_of_features=[]
+	while k<=num_features:
+		current_set_of_features.append(k)
+		k=k+1
+	best_overall_features=[]
+	best_overall_accuracy=float(0)
 
+	i=num_features
+	j=num_features
 
+	print("\nBeginning Search\n")
+	while(i>0):
+		feature_to_remove_at_this_level = 0
+		best_so_far_accuracy=float(0)
+
+		while(j>0):
+
+			if j in current_set_of_features:
+				temp_features=current_set_of_features[:]
+				#print('Resetting temp_features: '+str(temp_features))
+				temp_features.pop(j)
+				accuracy=getAccuracy(data,temp_features)
+				print('     Using features '+str(temp_features)+' accuracy is: '+str(accuracy))
+
+				if accuracy>best_so_far_accuracy:
+					best_so_far_accuracy=accuracy
+					feature_to_remove_at_this_level=j
+					
+			j=j-1
+		i=i-1
+
+		current_set_of_features.pop(feature_to_remove_at_this_level)
+		if(best_so_far_accuracy>best_overall_accuracy):
+			best_overall_accuracy=best_so_far_accuracy
+			best_overall_features=current_set_of_features[:]
+		print("\nFeature set "+str(current_set_of_features)+" was best, accuracy is: "+str(best_so_far_accuracy)+"\n")
 
 
 #open the file for reading and add to the list of lists
@@ -102,8 +146,11 @@ for line in f:
    arr_line=line.split()
    data.append(arr_line)
    num_features=len(arr_line)-1
-   #print(line)
+ui=raw_input("\n\nType the number of the Algorithm you want to run:\n1.Forward Selection\n2.Backward Elimination\n\n")
 message="\n\nThis dataset has "+str(num_features)+" features (not including the class attribute), with "
 message=message+str(len(data))+" instances"
 print(message)
-forward_feature_selection(num_features)
+if ui=='1':
+	forward_selection(num_features)
+if ui=='2':
+	backward_elimination(num_features)
