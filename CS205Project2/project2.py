@@ -1,5 +1,5 @@
 import math
-import numpy
+#import numpy
 
 data= []
 
@@ -132,7 +132,7 @@ def backward_elimination(num_features):
 
 		ri=current_set_of_features.index(feature_to_remove_at_this_level)
 		current_set_of_features.pop(ri)
-		if(best_so_far_accuracy>best_overall_accuracy):
+		if(best_so_far_accuracy>=best_overall_accuracy):
 			best_overall_accuracy=best_so_far_accuracy
 			best_overall_features=current_set_of_features[:]
 		print("\nFeature set "+str(current_set_of_features)+" was best, accuracy is: "+str(best_so_far_accuracy)+"\n")
