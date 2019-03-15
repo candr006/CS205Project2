@@ -70,11 +70,11 @@ def forward_selection(num_features):
 	best_overall_accuracy=float(0)
 
 	print("\nBeginning Search\n")
-	for i in range(1,num_features-1):
+	for i in range(1,num_features+1):
 		feature_to_add_at_this_level = 0
 		best_so_far_accuracy=float(0)
 
-		for j in range(1,num_features-1):
+		for j in range(1,num_features+1):
 
 			if j not in current_set_of_features:
 				temp_features=current_set_of_features[:]
@@ -111,31 +111,34 @@ def backward_elimination(num_features):
 	j=num_features
 
 	print("\nBeginning Search\n")
-	while(i>0):
+	for j in range(1,num_features):
 		feature_to_remove_at_this_level = 0
 		best_so_far_accuracy=float(0)
+		j=num_features
 
-		while(j>0):
+		for j in range(1,num_features+1):
 
 			if j in current_set_of_features:
 				temp_features=current_set_of_features[:]
 				#print('Removing j: '+str(j)+" from features "+str(temp_features))
-				temp_features.pop(j-1)
+				ri=temp_features.index(j)
+				temp_features.pop(ri)
 				accuracy=getAccuracy(data,temp_features)
 				print('     Using features '+str(temp_features)+' accuracy is: '+str(accuracy))
 
 				if accuracy>best_so_far_accuracy:
 					best_so_far_accuracy=accuracy
 					feature_to_remove_at_this_level=j
-					
-			j=j-1
-		i=i-1
 
-		current_set_of_features.pop(feature_to_remove_at_this_level-1)
+		ri=current_set_of_features.index(feature_to_remove_at_this_level)
+		current_set_of_features.pop(ri)
 		if(best_so_far_accuracy>best_overall_accuracy):
 			best_overall_accuracy=best_so_far_accuracy
 			best_overall_features=current_set_of_features[:]
 		print("\nFeature set "+str(current_set_of_features)+" was best, accuracy is: "+str(best_so_far_accuracy)+"\n")
+
+	print("\nFinished Search!!! The best feature subset is "+str(best_overall_features)+" with an accuracy of "+str(best_overall_accuracy))
+
 
 
 #open the file for reading and add to the list of lists
