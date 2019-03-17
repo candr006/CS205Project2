@@ -95,7 +95,7 @@ def forward_selection(num_features):
 
 		print("\nFeature set "+str(current_set_of_features)+" was best, accuracy is: "+str(best_so_far_accuracy)+"\n")
 
-	print("\nFinished Search!!! The best feature subset is "+str(best_overall_features)+" with an accuracy of "+str(best_overall_accuracy))
+	print("\nFinished Search!!! The best feature subset is "+str(best_overall_features)+" with an accuracy of "+str(best_overall_accuracy)+"\n")
 
 
 def backward_elimination(num_features):
@@ -137,7 +137,7 @@ def backward_elimination(num_features):
 			best_overall_features=current_set_of_features[:]
 		print("\nFeature set "+str(current_set_of_features)+" was best, accuracy is: "+str(best_so_far_accuracy)+"\n")
 
-	print("\nFinished Search!!! The best feature subset is "+str(best_overall_features)+" with an accuracy of "+str(best_overall_accuracy))
+	print("\nFinished Search!!! The best feature subset is "+str(best_overall_features)+" with an accuracy of "+str(best_overall_accuracy)+"\n")
  
  
 def original_algorithm(num_features):
@@ -152,12 +152,16 @@ def original_algorithm(num_features):
 	print("\nBeginning Search\n")
 	i=1
 	while len(current_set_of_features)>0:
-		if (len(current_set_of_features)>1) or (i!=1):
+		if (len(current_set_of_features)>1) and (i>1):
 			first_half=current_set_of_features[:len(current_set_of_features)//2]
+			second_half=current_set_of_features[len(current_set_of_features)//2:]
+
+			if(len(first_half)<len(second_half)):
+				first_half.append(second_half[0])
+
 			first_accuracy=getAccuracy(data,first_half)
 			print('     Using features '+str(first_half)+' accuracy is: '+str(first_accuracy))
 
-			second_half=current_set_of_features[len(current_set_of_features)//2:]
 			second_accuracy=getAccuracy(data,second_half)
 			print('     Using features '+str(second_half)+' accuracy is: '+str(second_accuracy))
 			
@@ -182,7 +186,7 @@ def original_algorithm(num_features):
 			break
 		i=i+1
 
-	print("\nFinished Search!!! The best feature subset is "+str(best_overall_features)+" with an accuracy of "+str(best_overall_accuracy))
+	print("\nFinished Search!!! The best feature subset is "+str(best_overall_features)+" with an accuracy of "+str(best_overall_accuracy)+"\n")
 
 
 
