@@ -16,7 +16,7 @@ def returnAccuracy(a):
 #calculate the euclidean distance between two rows
 #exclude the class feature
 def euclidean_distance(a,b,feature_list):
-	num_feat=len(a)-1
+	num_feat=len(a)
 	i=1
 	total=0
 	while i<num_feat:
@@ -60,6 +60,7 @@ def getAccuracy(data,feature_list):
 		#if the classification of nn is correct then add to correct count
 		if d[0]==nn_class:
 			num_correct=num_correct+1
+		#print(str(d[0])+"-"+str(nn_class)+"-"+str(num_correct))
 
 	return (float(num_correct)/float(len(data)))
 
