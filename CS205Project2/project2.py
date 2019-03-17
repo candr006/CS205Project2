@@ -138,6 +138,51 @@ def backward_elimination(num_features):
 		print("\nFeature set "+str(current_set_of_features)+" was best, accuracy is: "+str(best_so_far_accuracy)+"\n")
 
 	print("\nFinished Search!!! The best feature subset is "+str(best_overall_features)+" with an accuracy of "+str(best_overall_accuracy))
+ 
+ 
+def original_algorithm(num_features):
+	k=1
+	current_set_of_features=[]
+	while k<=num_features:
+		current_set_of_features.append(k)
+		k=k+1
+	best_overall_features=[]
+	best_overall_accuracy=float(0)
+
+	print("\nBeginning Search\n")
+	i=1
+	while len(current_set_of_features)>0:
+		if (len(current_set_of_features)>1) or (i!=1):
+			first_half=current_set_of_features[:len(current_set_of_features)//2]
+			first_accuracy=getAccuracy(data,first_half)
+			print('     Using features '+str(first_half)+' accuracy is: '+str(first_accuracy))
+
+			second_half=current_set_of_features[len(current_set_of_features)//2:]
+			second_accuracy=getAccuracy(data,second_half)
+			print('     Using features '+str(second_half)+' accuracy is: '+str(second_accuracy))
+			
+			if first_accuracy>second_accuracy:
+				current_set_of_features=first_half[:]
+				best_so_far_accuracy=first_accuracy
+			else:
+				current_set_of_features=second_half[:]
+				best_so_far_accuracy=second_accuracy
+      
+		else:
+			best_so_far_accuracy=getAccuracy(data,current_set_of_features)
+			print('     Using features '+str(current_set_of_features)+' accuracy is: '+str(best_so_far_accuracy))
+
+		if(best_so_far_accuracy>=best_overall_accuracy):
+			best_overall_accuracy=best_so_far_accuracy
+			best_overall_features=current_set_of_features[:]
+		print("\nFeature set "+str(current_set_of_features)+" was best, accuracy is: "+str(best_so_far_accuracy)+"\n")
+
+
+		if len(current_set_of_features)<2:
+			break
+		i=i+1
+
+	print("\nFinished Search!!! The best feature subset is "+str(best_overall_features)+" with an accuracy of "+str(best_overall_accuracy))
 
 
 
@@ -149,7 +194,7 @@ for line in f:
    arr_line=line.split()
    data.append(arr_line)
    num_features=len(arr_line)-1
-ui=raw_input("\n\nType the number of the Algorithm you want to run:\n1.Forward Selection\n2.Backward Elimination\n\n")
+ui=raw_input("\n\nType the number of the Algorithm you want to run:\n1.Forward Selection\n2.Backward Elimination\n3.Original Algorithm\n\n")
 message="\n\nThis dataset has "+str(num_features)+" features (not including the class attribute), with "
 message=message+str(len(data))+" instances"
 print(message)
@@ -157,3 +202,5 @@ if ui=='1':
 	forward_selection(num_features)
 if ui=='2':
 	backward_elimination(num_features)
+if ui=='3':
+	original_algorithm(num_features)
