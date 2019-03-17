@@ -1,5 +1,5 @@
 import math
-#import numpy
+import numpy
 
 data= []
 
@@ -25,12 +25,12 @@ def euclidean_distance(a,b,feature_list):
 		i=i+1
 	return math.sqrt(total)
 
-def nearest_neighbor_class(a,a_ind,feature_list):
+def nearest_neighbor_class(a,a_ind,feature_list,data_list=data):
 	#keeps track of the distance and uses the key of the node to identify it
 	distance_list=[]
 
 	#find the distance between a and all other nodes
-	for key,d in enumerate(data):
+	for key,d in enumerate(data_list):
 
 		#do not compare nodes against themselves
 		if(key!=a_ind):
@@ -49,19 +49,40 @@ def nearest_neighbor_class(a,a_ind,feature_list):
 		nn_key=val[1]
 		break
 
-	#print('Nearest neighbor class: '+str(data[nn_key][0]))
-	return data[nn_key][0]
+	return data_list[nn_key][0]
 
 def getAccuracy(data,feature_list):
 	num_correct=0
 
 	for key,d in enumerate(data):
 		nn_class=nearest_neighbor_class(d,key,feature_list)
-		#print("Comp Class d: "+str(d[0])+" - "+str(nn_class))
 		if d[0]==nn_class:
 			num_correct=num_correct+1
-	#print("accuracy: "+str(float(num_correct)/float(len(data))))
+
 	return (float(num_correct)/float(len(data)))
+
+
+def leave_one_out_cv(num_features):
+	k=1
+	features=[]
+	while k<=num_features:
+		features.append(k)
+		k=k+1
+
+	num_rows=len(data)
+	num_correct=0
+
+	#loop through all the instances, leave one instance out at each run
+	#run nearest neighbor and check if the instance is classified correctly
+	for i in range(0,num_rows-1):
+		temp_data=data[:]
+		a=temp_data.pop(i)
+
+		nn_class=nearest_neighbor_class(a,i,features)
+		if(a[0]==nn_class):
+			num_correct=num_correct+1
+
+	print("Running nearest neighbor with all features, using 'leaving-one-out' evaluation, I get an accuracy of : "+str(float(num_correct)/float(num_rows)))
 
 
 def forward_selection(num_features):
@@ -78,7 +99,6 @@ def forward_selection(num_features):
 
 			if j not in current_set_of_features:
 				temp_features=current_set_of_features[:]
-				#print('Resetting temp_features: '+str(temp_features))
 				temp_features.append(j)
 				accuracy=getAccuracy(data,temp_features)
 				print('     Using features '+str(temp_features)+' accuracy is: '+str(accuracy))
@@ -120,7 +140,6 @@ def backward_elimination(num_features):
 
 			if j in current_set_of_features:
 				temp_features=current_set_of_features[:]
-				#print('Removing j: '+str(j)+" from features "+str(temp_features))
 				ri=temp_features.index(j)
 				temp_features.pop(ri)
 				accuracy=getAccuracy(data,temp_features)
@@ -200,8 +219,10 @@ for line in f:
    num_features=len(arr_line)-1
 ui=raw_input("\n\nType the number of the Algorithm you want to run:\n1.Forward Selection\n2.Backward Elimination\n3.Original Algorithm\n\n")
 message="\n\nThis dataset has "+str(num_features)+" features (not including the class attribute), with "
-message=message+str(len(data))+" instances"
+message=message+str(len(data))+" instances\n"
 print(message)
+leave_one_out_cv(num_features)
+
 if ui=='1':
 	forward_selection(num_features)
 if ui=='2':
